@@ -5,6 +5,14 @@ import os
 import pandas as pd
 
 
+def stringToDateTime(s):
+    return datetime.datetime.strptime(str(s)[:-6], '%Y-%m-%d %H:%M:%S')
+
+
+def toString(s):
+    return str(s)
+
+
 def store_stock_histories(startDate: datetime.datetime,
                           endDate: datetime.datetime):
 
@@ -15,12 +23,16 @@ def store_stock_histories(startDate: datetime.datetime,
     if not os.path.exists(path_dir + '/tickers_history'):
         os.makedirs(path_dir + '/tickers_history')
 
+    allInfo = []
     for ticker in tickers:
         print('Fetching {}'.format(ticker))
         tickerData = yf.Ticker(ticker)
         tickerDf = tickerData.history(interval='1d', start=startDate, end=endDate)
 
         tickerDf.to_csv('tickers_history/{}_price.csv'.format(ticker))
+        allInfo.append(tickerDf)
+
+    return allInfo
 
 def get_minutely_data(startDate: datetime.datetime,
                       endDate: datetime.datetime,
@@ -52,14 +64,19 @@ def get_last_30_days_data(tickers: list):
         fourthWeek = get_minutely_data(oneWeekAgo, today, ticker)
 
         wholeMonth = pd.concat([firstPeriod, firstWeek, secondWeek, thirdWeek, fourthWeek])
+        wholeMonth['DateTimeObj'] = wholeMonth.index.map(stringToDateTime)  # datetime format for conveniency if needed
+        wholeMonth['StrDateTime'] = wholeMonth.index.map(toString)  # string format for conveniency if needed
+
         wholeMonth.to_csv('minutely_pricing/{}_minutely.csv'.format(ticker))
+
+    return wholeMonth
 
 # getting price histories (daily data)
 # startDate = datetime.datetime(2020, 7, 1)
 # endDate = datetime.datetime(2021, 1, 15)
 # store_stock_histories(startDate, endDate)
 
+
 # getting minutely data
-# with open(os.path.dirname(os.path.realpath(__file__)) + '/tickers_info/tickers.pickle', "rb") as f:
-#     tickers = pickle.load(f)
-#     get_last_30_days_data(tickers)
+testTickers = ['AAPL', 'DSG']
+get_last_30_days_data(testTickers)
