@@ -3,6 +3,7 @@ import os
 import glob
 import datetime
 import re
+import pickle
 # import pandas as pd
 path = "tickers_history/*.csv"
 # dirs = os.listdir(path)
@@ -203,5 +204,7 @@ for fname in glob.glob(path):
                     # print("Accuracy for stable stock condition 2: {}%".format(accuracy_true_low_week_stable))
         
 print("The total no. of shortlisted stocks are: {}".format(total_filtered_stocks))
+with open('tickers_info/shortlisted_tickers', 'wb') as file:
+    pickle.dump(ticker_name_list, file)
 
 #ticker_name_list is the final list of tickers(shortlisted stocks)
