@@ -1,4 +1,8 @@
 datetime
 yfinance
 bs4
-matplotlib
+matplotlib.pyplot
+pandas
+numpy
+datetime
+csv
