@@ -61,6 +61,7 @@ def sellingCondition(minutely_price_history: pd.DataFrame,
 
     yesterdayPrice = daily_price_history.loc[indexes[0][0], 'Close']
 
+
     currentPrice = minutely_price_history.loc[current_time_index, 'Close']
 
     if yesterdayPrice is not None and currentPrice >= 1.01 * yesterdayPrice:
@@ -73,33 +74,38 @@ def getStockActivity(minutely_price_history: pd.DataFrame,
                      daily_price_history: pd.DataFrame,
                      stock_ticker: str):
 
-    activity = {stock_ticker: []}
+    activity = []
     for index in minutely_price_history.index:
         currentTime = stringToDateTime(minutely_price_history.loc[index, 'DateTimeObj'])
 
         if buyingCondition(minutely_price_history, daily_price_history, currentTime, index):
-            activity[stock_ticker].append({'action': 'buy', 'time': currentTime})
+            activity.append({'stock': stock_ticker, 'action': 'buy', 'time': currentTime})
 
         elif sellingCondition(minutely_price_history, daily_price_history, currentTime, index):
-            activity[stock_ticker].append({'action': 'sell', 'time': currentTime})
+            activity.append({'stock': stock_ticker, 'action': 'sell', 'time': currentTime})
 
-    return activity
+    return activity # [{stock:, action:, time:}]
 
 
 with open('tickers_info/shortlisted_tickers', 'rb') as file:
     shortlist = pickle.load(file)
 
-
+print("1")
 df_dict = {}
 for ticker in shortlist:
     minutely = pd.read_csv('minutely_pricing/{}_minutely.csv'.format(ticker))
     daily = pd.read_csv('tickers_history/{}_price.csv'.format(ticker))
     df_dict[ticker] = {'minutely': minutely, 'daily': daily}
 
-allActivity = {}
+print("2")
+allActivity = []
 for ticker in df_dict.keys():
-    allActivity.update(getStockActivity(df_dict[ticker]['minutely'], df_dict[ticker]['daily'], ticker))
+    nextArray = getStockActivity(df_dict[ticker]['minutely'], df_dict[ticker]['daily'], ticker)
+    allActivity = allActivity + nextArray
     print("{} done".format(ticker))
 
+print("3")
 with open('action/stock_actions.pickle', 'wb') as file:
     pickle.dump(allActivity, file)
+
+
