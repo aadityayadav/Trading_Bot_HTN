@@ -2,8 +2,6 @@ import pickle
 import pandas as pd
 from datetime import datetime, timedelta
 from math import floor, ceil
-# from .Wallet import Wallet
-# from .testing_strategy import sellingCondition, buyingCondition, getIndexes
 
 
 class Wallet:
@@ -70,50 +68,6 @@ def getIndexes(dfObj, value):
     return listOfPos
 
 
-def buyingCondition(minutely_price_history: pd.DataFrame,
-                    daily_price_history: pd.DataFrame,
-                    current_time: datetime,
-                    current_time_index: int):
-
-    n_days = 1
-    indexes = []
-    while len(indexes) == 0 and n_days < 30:
-        yesterday = (current_time.date() - timedelta(n_days)).__str__()
-        indexes = getIndexes(daily_price_history, yesterday)
-        n_days += 1
-
-    yesterdayPrice = daily_price_history.loc[indexes[0][0], 'Low']
-
-    currentPrice = minutely_price_history.loc[current_time_index, 'Close']
-
-    if yesterdayPrice is not None and currentPrice <= 1.01 * yesterdayPrice:
-        return True
-    else:
-        return False
-
-
-def sellingCondition(minutely_price_history: pd.DataFrame,
-                     daily_price_history: pd.DataFrame,
-                     current_time: datetime,
-                     current_time_index: int):
-
-    n_days = 1
-    indexes = []
-    while len(indexes) == 0 and n_days < 30:
-        yesterday = (current_time.date() - timedelta(n_days)).__str__()
-        indexes = getIndexes(daily_price_history, yesterday)
-        n_days += 1
-
-    yesterdayPrice = daily_price_history.loc[indexes[0][0], 'Close']
-
-
-    currentPrice = minutely_price_history.loc[current_time_index, 'Close']
-
-    if yesterdayPrice is not None and currentPrice >= 1.01 * yesterdayPrice:
-        return True
-    else:
-        return False
-
 with open('action/stock_actions.pickle', 'rb') as file:
     activity = pickle.load(file)
 
@@ -177,7 +131,7 @@ last_minute = sortedActivity[-1]['time']
 for stock in all_stocks:
     quantity = all_stocks[stock]
     # print(quantity)
-    index = getIndexes(df_dict[stock]['minutely'], toString(last_minute) + '-05:00')[0][0]
+    index = getIndexes(df_dict[stock]['minutely'], str(last_minute) + '-05:00')[0][0]
     currentPrice = df_dict[stock]['minutely'].loc[index, 'Close']
     # print(current_price)
 
