@@ -79,7 +79,7 @@ def get_last_30_days_data(tickers: list):
 
 
 #getting daily data
-# startDate = datetime.datetime(2020, 12, 1)
+# startDate = datetime.datetime(2020, 7, 1)
 # endDate = datetime.datetime(2021, 1, 15)
 # store_stock_histories(startDate, endDate)
 

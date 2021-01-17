@@ -87,25 +87,25 @@ def getStockActivity(minutely_price_history: pd.DataFrame,
     return activity # [{stock:, action:, time:}]
 
 
+
 with open('tickers_info/shortlisted_tickers', 'rb') as file:
     shortlist = pickle.load(file)
 
-print("1")
+
 df_dict = {}
 for ticker in shortlist:
     minutely = pd.read_csv('minutely_pricing/{}_minutely.csv'.format(ticker))
     daily = pd.read_csv('tickers_history/{}_price.csv'.format(ticker))
     df_dict[ticker] = {'minutely': minutely, 'daily': daily}
 
-print("2")
 allActivity = []
 for ticker in df_dict.keys():
     nextArray = getStockActivity(df_dict[ticker]['minutely'], df_dict[ticker]['daily'], ticker)
     allActivity = allActivity + nextArray
     print("{} done".format(ticker))
 
-print("3")
 with open('action/stock_actions.pickle', 'wb') as file:
     pickle.dump(allActivity, file)
 
 
+#   [  {'stock': ticker_name, 'time': datetime, 'action': buy/sell}    ]

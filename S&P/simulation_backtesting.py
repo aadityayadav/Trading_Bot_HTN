@@ -129,11 +129,10 @@ for ticker in shortlist:
     minutely = pd.read_csv('minutely_pricing/{}_minutely.csv'.format(ticker))
     daily = pd.read_csv('tickers_history/{}_price.csv'.format(ticker))
     df_dict[ticker] = {'minutely': minutely, 'daily': daily}
-
+# {stock_name: }
 
 initial_investment = 10000
 wallet = Wallet(initial_investment)
-minute_count = 0
 available_money = wallet.get_available_money()
 hourly_limit_money = available_money * wallet.get_hourly_limit()
 current_price = 0
