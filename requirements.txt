@@ -1,3 +1,4 @@
 datetime
 yfinance
 bs4
+matplotlib

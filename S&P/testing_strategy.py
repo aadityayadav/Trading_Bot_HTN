@@ -41,7 +41,7 @@ def buyingCondition(minutely_price_history: pd.DataFrame,
 
     currentPrice = minutely_price_history.loc[current_time_index, 'Close']
 
-    if yesterdayPrice is not None and currentPrice <= 1.01 * yesterdayPrice:
+    if yesterdayPrice is not None and currentPrice <= 0.995 * yesterdayPrice:
         return True
     else:
         return False
@@ -64,7 +64,7 @@ def sellingCondition(minutely_price_history: pd.DataFrame,
 
     currentPrice = minutely_price_history.loc[current_time_index, 'Close']
 
-    if yesterdayPrice is not None and currentPrice >= 1.01 * yesterdayPrice:
+    if yesterdayPrice is not None and currentPrice >= 1.04 * yesterdayPrice:
         return True
     else:
         return False

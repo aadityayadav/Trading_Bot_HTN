@@ -4,6 +4,8 @@ import glob
 import datetime
 import re
 import pickle
+import numpy as np
+import matplotlib.pyplot as plt
 # import pandas as pd
 path = "tickers_history/*.csv"
 # dirs = os.listdir(path)
@@ -14,8 +16,10 @@ def consecutive_dates(d1,d2):
         return True
     return False
 
-total_filtered_stocks=0
+
+total_filtered_stocks = 0
 ticker_name_list = []
+graph_data = []
 
 for fname in glob.glob(path):
         # print(fname)
@@ -194,6 +198,10 @@ for fname in glob.glob(path):
                     ticker_name = ''.join(x)
                     ticker_name_list.append(ticker_name)
                     print(ticker_name)
+                    row_data = [accuracy_true_high_day, accuracy_true_latestlow_day, accuracy_true_high_week,
+                                accuracy_true_low_week, accuracy_true_high_month, accuracy_true_low_month,
+                                accuracy_true_stable_day, accuracy_true_low_week_stable]
+                    graph_data.append(row_data)
                     # print("Accuracy for week high: {}%".format(accuracy_true_high_week))
                     # print("Accuracy for week low: {}%".format(accuracy_true_low_week))
                     # print("Accuracy for month high: {}%".format(accuracy_true_high_month))
