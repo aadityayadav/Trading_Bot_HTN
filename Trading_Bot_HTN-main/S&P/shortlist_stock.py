@@ -4,7 +4,9 @@ import glob
 import datetime
 import re
 import pickle
-# import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
 path = "tickers_history/*.csv"
 # dirs = os.listdir(path)
 
@@ -16,6 +18,8 @@ def consecutive_dates(d1,d2):
 
 total_filtered_stocks=0
 ticker_name_list = []
+icker_name_list = []
+graph_data = []
 
 for fname in glob.glob(path):
         # print(fname)
@@ -24,7 +28,6 @@ for fname in glob.glob(path):
             header = next(readCSV)
             total=0
             
-
             #this is the working function for weekly trend
             if header !=None:
                 week_high_condition = 0
@@ -186,7 +189,7 @@ for fname in glob.glob(path):
                 accuracy_true_low_week_stable = ((week_low_condition_stable-1)/(week_total_stable-1))*100
                 # print("Accuracy for stable stock condition 2: {}%".format(accuracy_true_low_week_stable))
                 
-
+                 
                 if  accuracy_true_high_week >= 65 and  accuracy_true_low_week >= 65 and accuracy_true_high_month>=60 and accuracy_true_low_month>=60 and accuracy_true_latestlow_day >=55 and accuracy_true_high_day >=55 and accuracy_true_stable_day >=15 and accuracy_true_low_week_stable>=70:
                     total_filtered_stocks+=1
                     x = re.findall("[A-Z]",fname)
@@ -194,6 +197,8 @@ for fname in glob.glob(path):
                     ticker_name = ''.join(x)
                     ticker_name_list.append(ticker_name)
                     print(ticker_name)
+                    row_data = [accuracy_true_high_day,accuracy_true_latestlow_day,accuracy_true_high_week,accuracy_true_low_week,accuracy_true_high_month,accuracy_true_low_month,accuracy_true_stable_day,accuracy_true_low_week_stable] 
+                    graph_data.append(row_data)
                     # print("Accuracy for week high: {}%".format(accuracy_true_high_week))
                     # print("Accuracy for week low: {}%".format(accuracy_true_low_week))
                     # print("Accuracy for month high: {}%".format(accuracy_true_high_month))
@@ -207,4 +212,38 @@ print("The total no. of shortlisted stocks are: {}".format(total_filtered_stocks
 with open('tickers_info/shortlisted_tickers', 'wb') as file:
     pickle.dump(ticker_name_list, file)
 
+
+
+
 #ticker_name_list is the final list of tickers(shortlisted stocks)
+# X = np.arange(8)
+# fig = plt.figure()
+# ax = fig.add_axes([0,0,1,1])
+# bar_width = 0.10
+
+
+# ax.bar(X + 0.00, graph_data[0], color = 'b', width = 0.10)
+# ax.bar(X + 0.10, graph_data[1], color = 'g', width = 0.10)
+# ax.bar(X + 0.20, graph_data[2], color = 'r', width = 0.10)
+# ax.bar(X + 0.30, graph_data[3], color = 'b', width = 0.10)
+# ax.bar(X + 0.40, graph_data[4], color = 'g', width = 0.10)
+# ax.bar(X + 0.50, graph_data[5], color = 'r', width = 0.10)
+# ax.bar(X + 0.60, graph_data[6], color = 'b', width = 0.10)
+# ax.bar(X + 0.70, graph_data[7], color = 'g', width = 0.10)
+# plt.xlabel('Conditions')
+# plt.ylabel('Accuracy Percentage')
+
+# plt.xticks(X + bar_width, ('accuracy_true_high_day','accuracy_true_latestlow_day','accuracy_true_high_week','accuracy_true_low_week','accuracy_true_high_month','accuracy_true_low_month','accuracy_true_stable_day','accuracy_true_low_week_stable'))
+
+
+
+
+# plt.show(block=True) 
+
+
+# sub_bars = ['work','accuracy_true_high_day','accuracy_true_latestlow_day','accuracy_true_high_week','accuracy_true_low_week','accuracy_true_high_month','accuracy_true_low_month','accuracy_true_stable_day','accuracy_true_low_week_stable']
+
+ax = pd.DataFrame(graph_data,index = ticker_name_list).plot.bar()
+ax.set_xlabel("Stocks")
+ax.set_ylabel("Accuracy Percentage")
+plt.show(block=True) 
