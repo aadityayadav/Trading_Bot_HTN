@@ -10,6 +10,7 @@ What it does
 Trading robots are programs that use mathematical algorithms in deciding whether to trade. From the market fluctuations, the trading robots are able to come up with signals that are translated to generate orders that make it easy to trade. Trading robots eliminate the psychological strains involved in the forex trade.
 
 Our trading robot uses a quant trading algorithm in order to shortlist ideal stocks and trade using custom trigger point algorithms. It also has the capability of scraping minutely and daily data for a stock index and backtesting the strategies on any period of time.
+
 How we built it
 
 To make this project we divided it into 3 main parts. The first was to get the data which was done using a web scraper. The second part was the shortlist stocks that would be suitable for our algorithm, to do that we implemented 8 conditions(daily,weekly and monthly uptrend and stability of stocks) and tested them for accuracy. If the accuracy was above a certain percent we shortlisted it. Then we used the web scraper to get minutely data in the past month and tested out bot with it.
